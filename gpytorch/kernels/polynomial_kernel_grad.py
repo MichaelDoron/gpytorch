@@ -46,7 +46,7 @@ class PolynomialKernelGrad(PolynomialKernel):
 
             all_outers = x1.unsqueeze(-2).unsqueeze(-2).transpose(-2, -1).matmul(x2.unsqueeze(-3).unsqueeze(-2))
             K22_base = base_inner_prod.pow(self.power - 2) * (self.power) * (self.power - 1)
-            K22 = (K22_base.unsqueeze(-1).unsqueeze(-1) * all_outers).view(n1 * d, n2 * d)
+            K22 = (K22_base.unsqueeze(-1).unsqueeze(-1) * all_outers).transpose(-3, -2).contiguous().view(n1 * d, n2 * d)
 
             kp = KroneckerProductLazyTensor(
                 torch.eye(d, d, device=x1.device, dtype=x1.dtype).repeat(*batch_shape, 1, 1),
